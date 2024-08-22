@@ -41,21 +41,28 @@ class Interpreter(object):
         current_char = text[self.pos]
 
         while current_char.isspace():
-            self.pos+= 1
-            current_char = text[self.pos]
+            text_ended = (self.pos+1 > len(text) -1)
+            if not text_ended:
+                self.pos+= 1
+                current_char = text[self.pos]
+            else:
+                return (Token(Type.EOF, None))
+
         
-        digits: str = ''
-        if current_char.isdigit():            
+        
+        if current_char.isdigit():  
+            digits: str = ''          
             while True:
                 digits += current_char
                 
-                if text[self.pos+1].isdigit():
+                text_ended = (self.pos+1 > len(text) -1)
+                if  not text_ended and (text[self.pos+1].isdigit()):
                     self.pos += 1
                     current_char = text[self.pos]
                 else:
                     self.pos += 1
                     break
-                return Token(Type.INTEGER, int(digits))
+            return Token(Type.INTEGER, int(digits))
             
         
         if current_char == '+':
